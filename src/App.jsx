@@ -2,20 +2,19 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPassword from './pages/forgotpassword';
+import DashboardPage from './pages/DashboardPage';
 
-// Simple Dashboard placeholder component (kept here to keep pages folder minimal)
 function Dashboard() {
   const userJson = localStorage.getItem('ubl_user');
   const user = userJson ? JSON.parse(userJson) : null;
 
   const handleLogout = () => {
     localStorage.removeItem('ubl_token');
-    // optionally keep users list intact
     window.location.href = '/';
   };
 
   if (!localStorage.getItem('ubl_token')) {
-    // Not authenticated — redirect to login
     return <Navigate to="/" replace />;
   }
 
@@ -30,7 +29,6 @@ function Dashboard() {
   );
 }
 
-// ProtectedRoute component checks for a token in localStorage
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('ubl_token');
   if (!token) {
@@ -45,16 +43,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        {/* catch-all: redirect unknown routes to login */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </BrowserRouter>
   );
